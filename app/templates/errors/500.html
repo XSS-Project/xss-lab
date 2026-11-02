@@ -1,0 +1,3 @@
+{% extends 'base.html' %}
+{% block title %}Có lỗi khi xử lý{% endblock %}
+{% block content %}<section class="error-page"><p class="eyebrow">LỖI 500</p><h1>Chưa thể tải nội dung.</h1><p>Máy chủ gặp lỗi khi xử lý yêu cầu. Hãy thử lại sau hoặc quay về trang chủ.</p><a class="button primary" href="{{ url_for('main.index') }}">Về trang chủ</a></section>{% endblock %}

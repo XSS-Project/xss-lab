@@ -1,0 +1,6 @@
+{% extends '_module_placeholder.html' %}
+{% set module_name = 'Reflected XSS' %}
+{% set module_number = '01' %}
+{% set description = 'Tìm kiếm tài liệu và theo dõi dữ liệu từ query parameter đến phản hồi HTML.' %}
+{% set planned_work = 'Thành viên 1 sẽ bổ sung tìm kiếm trên dữ liệu mẫu cố định, cặp phiên bản xử lý đầu ra và bằng chứng HTTP / trình duyệt ở giai đoạn tiếp theo.' %}
+{% set other_endpoint = 'reflected.fixed_search' if version == 'vulnerable' else 'reflected.vulnerable_search' %}

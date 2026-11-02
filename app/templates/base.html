@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Lab An toàn máy tính — tài liệu học tập và khung thực hành XSS cục bộ.">
+  <title>{% block title %}Tổng quan{% endblock %} · ATMT Lab</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Chuyển đến nội dung</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="{{ url_for('main.index') }}" aria-label="ATMT Lab — Trang chủ"><span class="brand-mark" aria-hidden="true">a<span>t</span></span><span>ATMT<span class="brand-light"> / Lab</span></span></a>
+      <button class="nav-toggle" type="button" aria-controls="main-navigation" aria-expanded="false" hidden>Menu</button>
+      {% set current = request.blueprint %}
+      <nav id="main-navigation" class="nav-links" aria-label="Điều hướng chính">
+        <a href="{{ url_for('main.index') }}" {% if request.endpoint == 'main.index' %}aria-current="page"{% endif %}>Tổng quan</a>
+        <a href="{{ url_for('main.documents') }}" {% if request.endpoint in ['main.documents', 'main.document_detail'] %}aria-current="page"{% endif %}>Tài liệu</a>
+        <a href="{{ url_for('main.index') }}#modules" {% if current in ['reflected', 'stored', 'dom'] %}aria-current="location"{% endif %}>Các module</a>
+        <a href="{{ url_for('main.guide') }}" {% if request.endpoint == 'main.guide' %}aria-current="page"{% endif %}>Hướng dẫn</a>
+      </nav>
+      <span class="local-label"><span aria-hidden="true"></span>Thực hành cục bộ</span>
+    </div>
+  </header>
+  <main id="main-content" class="container" tabindex="-1">{% block content %}{% endblock %}</main>
+  <footer class="site-footer"><div class="container footer-inner"><span><strong>ATMT / Lab</strong> <span class="footer-note">Không gian học tập an toàn ứng dụng</span></span><span>Giai đoạn 1 · Dữ liệu mẫu · Localhost</span></div></footer>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

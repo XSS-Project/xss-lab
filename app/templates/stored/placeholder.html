@@ -1,0 +1,6 @@
+{% extends '_module_placeholder.html' %}
+{% set module_name = 'Stored XSS' %}
+{% set module_number = '02' %}
+{% set description = 'Bình luận tài liệu và quan sát dữ liệu được lưu, đọc rồi hiển thị cho người xem.' %}
+{% set planned_work = 'Thành viên 2 sẽ bổ sung lớp dữ liệu SQLite, bình luận, init/reset và thực nghiệm hai phiên trình duyệt. Khung hiện tại chưa nhận POST hay lưu dữ liệu.' %}
+{% set other_endpoint = 'stored.fixed_comments' if version == 'vulnerable' else 'stored.vulnerable_comments' %}

@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}Tài liệu mẫu{% endblock %}
+{% block content %}
+<header class="page-heading"><p class="eyebrow">THƯ VIỆN HỌC TẬP</p><h1>Tài liệu mẫu</h1><p>Kiến thức nền để cùng bắt đầu. Dữ liệu cố định, không cần cơ sở dữ liệu.</p></header>
+<div class="filter-bar"><form method="get" action="{{ url_for('main.documents') }}"><label for="category">Danh mục</label><select id="category" name="category"><option value="">Tất cả danh mục</option>{% if selected_category and selected_category not in categories %}<option value="{{ selected_category }}" selected>Danh mục không tồn tại</option>{% endif %}{% for category in categories %}<option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>{{ category }}</option>{% endfor %}</select><button class="button primary" type="submit">Lọc tài liệu</button>{% if selected_category %}<a class="text-link" href="{{ url_for('main.documents') }}">Bỏ lọc</a>{% endif %}</form><p class="result-count"><strong>{{ documents | length }}</strong> tài liệu phù hợp</p></div>
+{% if selected_category %}<p class="filter-summary">Danh mục đang chọn: <strong>{{ selected_category }}</strong></p>{% endif %}
+{% if documents %}<div class="document-grid library-grid">{% for document in documents %}{% include '_document_card.html' %}{% endfor %}</div>{% else %}<section class="empty-state"><span class="empty-icon" aria-hidden="true">∅</span><h2>Không tìm thấy tài liệu</h2><p>Chưa có tài liệu thuộc danh mục này. Hãy thử xem toàn bộ thư viện.</p><a class="button primary" href="{{ url_for('main.documents') }}">Bỏ lọc danh mục</a></section>{% endif %}
+{% endblock %}

@@ -1,0 +1,3 @@
+{% extends 'base.html' %}
+{% block title %}Không tìm thấy trang{% endblock %}
+{% block content %}<section class="error-page"><p class="eyebrow">LỖI 404</p><h1>Trang này chưa có ở đây.</h1><p>Đường dẫn hoặc tài liệu bạn tìm không tồn tại. Hãy quay lại thư viện hoặc trang chủ.</p><div class="actions"><a class="button primary" href="{{ url_for('main.index') }}">Về trang chủ</a><a class="button secondary" href="{{ url_for('main.documents') }}">Xem tài liệu</a></div></section>{% endblock %}

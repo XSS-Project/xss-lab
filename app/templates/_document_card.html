@@ -1,0 +1,6 @@
+<article class="document-card">
+  <div class="card-meta"><span class="category">{{ document.category }}</span><span class="document-id">TL / {{ '%02d' | format(document.id) }}</span></div>
+  <h3><a href="{{ url_for('main.document_detail', document_id=document.id) }}">{{ document.title }}</a></h3>
+  <p>{{ document.description }}</p>
+  <a class="text-link" href="{{ url_for('main.document_detail', document_id=document.id) }}">Đọc tài liệu <span aria-hidden="true">↗</span></a>
+</article>

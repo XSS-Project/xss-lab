@@ -1,0 +1,6 @@
+{% extends '_module_placeholder.html' %}
+{% set module_name = 'DOM-based XSS' %}
+{% set module_number = '03' %}
+{% set description = 'Xem trước ghi chú và theo dõi dữ liệu từ URL fragment đến vùng nội dung của trang.' %}
+{% set planned_work = 'Thành viên 3 sẽ bổ sung preview, xử lý fragment, giải mã, hashchange và reset bằng script riêng. Khung hiện tại chưa đọc hay render ghi chú từ URL.' %}
+{% set other_endpoint = 'dom.fixed_preview' if version == 'vulnerable' else 'dom.vulnerable_preview' %}

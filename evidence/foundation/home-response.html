@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Lab An toàn máy tính — tài liệu học tập và khung thực hành XSS cục bộ.">
+  <title>Tổng quan · ATMT Lab</title>
+  <link rel="stylesheet" href="/static/css/base.css">
+  <script src="/static/js/main.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Chuyển đến nội dung</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="/" aria-label="ATMT Lab — Trang chủ"><span class="brand-mark" aria-hidden="true">a<span>t</span></span><span>ATMT<span class="brand-light"> / Lab</span></span></a>
+      <button class="nav-toggle" type="button" aria-controls="main-navigation" aria-expanded="false" hidden>Menu</button>
+      
+      <nav id="main-navigation" class="nav-links" aria-label="Điều hướng chính">
+        <a href="/" aria-current="page">Tổng quan</a>
+        <a href="/documents" >Tài liệu</a>
+        <a href="/#modules" >Các module</a>
+        <a href="/guide" >Hướng dẫn</a>
+      </nav>
+      <span class="local-label"><span aria-hidden="true"></span>Thực hành cục bộ</span>
+    </div>
+  </header>
+  <main id="main-content" class="container" tabindex="-1">
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow"><span class="small-line"></span> AN TOÀN MÁY TÍNH / KHÔNG GIAN THỰC HÀNH</p>
+    <h1>Hiểu cách Web chạy.<br><span>Học cách bảo vệ Web.</span></h1>
+    <p class="hero-description">Khám phá tài liệu học tập và chuẩn bị thực nghiệm ba tình huống XSS trong một môi trường cục bộ, có kiểm soát.</p>
+    <div class="actions"><a class="button primary" href="/documents">Khám phá tài liệu <span aria-hidden="true">↗</span></a><a class="button secondary" href="/guide">Bắt đầu từ hướng dẫn</a></div>
+    <p class="hero-footnote">Nền tảng đã hoạt động. Các thực nghiệm XSS đang chờ triển khai.</p>
+  </div>
+  <aside class="lab-panel" aria-label="Lộ trình thực hành">
+    <div class="panel-top"><span class="mono">LAB / WORKSPACE</span><span class="panel-dot" aria-hidden="true"></span></div>
+    <p class="panel-caption">Từ quan sát đến kiểm chứng</p>
+    <ol class="workflow"><li><span class="step-number">01</span><div><strong>Đọc &amp; khám phá</strong><span>Tài liệu mẫu và kiến thức nền</span></div><span class="status-mini">Sẵn sàng</span></li><li><span class="step-number">02</span><div><strong>Thực nghiệm XSS</strong><span>Reflected · Stored · DOM-based</span></div></li><li><span class="step-number">03</span><div><strong>So sánh &amp; kiểm thử</strong><span>Quan sát trước và sau khắc phục</span></div></li></ol>
+    <div class="panel-bottom"><span aria-hidden="true">⌘</span> Chỉ dùng dữ liệu giả trên 127.0.0.1</div>
+  </aside>
+</section>
+<section id="modules" class="section-block" aria-labelledby="module-title">
+  <div class="section-heading"><div><p class="eyebrow">KHÔNG GIAN NGHIÊN CỨU</p><h2 id="module-title">Ba góc nhìn về XSS</h2></div><span class="tag neutral">Chưa triển khai chức năng thực nghiệm</span></div>
+  <div class="module-grid">
+    
+    <article class="module-card"><div class="module-top"><span class="module-number">01</span><span class="mono">Tìm kiếm tài liệu</span></div><h3>Reflected XSS</h3><p>Theo dõi dữ liệu từ truy vấn tìm kiếm đến phản hồi HTML của máy chủ.</p><div class="module-links"><a class="version-link vulnerable" href="/vulnerable/search">Có lỗ hổng <span aria-hidden="true">↗</span></a><a class="version-link fixed" href="/fixed/search">Đã khắc phục <span aria-hidden="true">↗</span></a></div><p class="module-note">Khung điều hướng · Chưa có thực nghiệm</p></article>
+    
+    <article class="module-card"><div class="module-top"><span class="module-number">02</span><span class="mono">Bình luận tài liệu</span></div><h3>Stored XSS</h3><p>Quan sát dữ liệu được lưu trữ và hiển thị lại qua các phiên người xem.</p><div class="module-links"><a class="version-link vulnerable" href="/vulnerable/comments">Có lỗ hổng <span aria-hidden="true">↗</span></a><a class="version-link fixed" href="/fixed/comments">Đã khắc phục <span aria-hidden="true">↗</span></a></div><p class="module-note">Khung điều hướng · Chưa có thực nghiệm</p></article>
+    
+    <article class="module-card"><div class="module-top"><span class="module-number">03</span><span class="mono">Xem trước ghi chú</span></div><h3>DOM-based XSS</h3><p>Khảo sát cách trình duyệt đưa dữ liệu từ URL fragment vào giao diện.</p><div class="module-links"><a class="version-link vulnerable" href="/vulnerable/preview">Có lỗ hổng <span aria-hidden="true">↗</span></a><a class="version-link fixed" href="/fixed/preview">Đã khắc phục <span aria-hidden="true">↗</span></a></div><p class="module-note">Khung điều hướng · Chưa có thực nghiệm</p></article>
+    
+  </div>
+</section>
+<section class="section-block" aria-labelledby="documents-title"><div class="section-heading"><div><p class="eyebrow">THƯ VIỆN HỌC TẬP</p><h2 id="documents-title">Một chút kiến thức nền</h2></div><a class="text-link" href="/documents">Xem tất cả tài liệu <span aria-hidden="true">→</span></a></div><div class="document-grid"><article class="document-card">
+  <div class="card-meta"><span class="category">Web</span><span class="document-id">TL / 01</span></div>
+  <h3><a href="/documents/1">Bắt đầu với ứng dụng Web</a></h3>
+  <p>Từ một địa chỉ trên trình duyệt đến một trang web được hiển thị.</p>
+  <a class="text-link" href="/documents/1">Đọc tài liệu <span aria-hidden="true">↗</span></a>
+</article><article class="document-card">
+  <div class="card-meta"><span class="category">HTTP</span><span class="document-id">TL / 02</span></div>
+  <h3><a href="/documents/2">HTTP: request và response</a></h3>
+  <p>Làm quen với phương thức, đường dẫn và mã trạng thái HTTP.</p>
+  <a class="text-link" href="/documents/2">Đọc tài liệu <span aria-hidden="true">↗</span></a>
+</article><article class="document-card">
+  <div class="card-meta"><span class="category">JavaScript</span><span class="document-id">TL / 03</span></div>
+  <h3><a href="/documents/3">JavaScript và cây DOM</a></h3>
+  <p>Hiểu cách JavaScript đọc và cập nhật nội dung trên trang.</p>
+  <a class="text-link" href="/documents/3">Đọc tài liệu <span aria-hidden="true">↗</span></a>
+</article></div></section>
+<aside class="callout"><div><strong>Chưa biết bắt đầu từ đâu?</strong><p>Đọc hướng dẫn để hiểu phạm vi và những chức năng đang sẵn sàng.</p></div><a class="button secondary" href="/guide">Mở hướng dẫn <span aria-hidden="true">→</span></a></aside>
+</main>
+  <footer class="site-footer"><div class="container footer-inner"><span><strong>ATMT / Lab</strong> <span class="footer-note">Không gian học tập an toàn ứng dụng</span></span><span>Giai đoạn 1 · Dữ liệu mẫu · Localhost</span></div></footer>
+  
+</body>
+</html>

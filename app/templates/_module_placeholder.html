@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block title %}{{ module_name }} · {{ 'Có lỗ hổng' if version == 'vulnerable' else 'Đã khắc phục' }}{% endblock %}
+{% block content %}
+<section class="module-placeholder"><a class="text-link back-link" href="{{ url_for('main.index') }}#modules">← Quay lại các module</a><p class="eyebrow">KHÔNG GIAN NGHIÊN CỨU / {{ module_number }}</p><h1>{{ module_name }}</h1><span class="tag {{ version }}">{{ 'Có lỗ hổng' if version == 'vulnerable' else 'Đã khắc phục' }}</span><p class="lead">{{ description }}</p><div class="pending-panel"><span class="pending-symbol" aria-hidden="true">…</span><div><h2>Chưa triển khai chức năng thực nghiệm</h2><p>{{ planned_work }}</p><p>Trang hiện tại là khung điều hướng. Nhãn phiên bản chưa thể hiện kết quả thực nghiệm hay kiểm thử bảo mật.</p></div></div><div class="actions"><a class="button primary" href="{{ url_for(other_endpoint) }}">{{ 'Sang bản Đã khắc phục' if version == 'vulnerable' else 'Sang bản Có lỗ hổng' }} <span aria-hidden="true">→</span></a><a class="button secondary" href="{{ url_for('main.index') }}">Về trang chủ</a></div></section>
+{% endblock %}
