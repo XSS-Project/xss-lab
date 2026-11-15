@@ -25,7 +25,7 @@ from pathlib import Path
 import socket
 import sqlite3
 import time
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, quote, urlparse
 
 PORT = int(os.environ.get("PORT", "5000"))
 BASE_DIR = Path(__file__).resolve().parent
@@ -525,8 +525,10 @@ class SocialLabHandler(BaseHTTPRequestHandler):
         self.wfile.write(data)
 
     def redirect(self, location: str, set_uid: int | None = None):
+        # Mã hóa URL sang ASCII chuẩn HTTP/WSGI để không bị lỗi UnicodeEncodeError ('latin-1') khi chứa tiếng Việt có dấu
+        safe_location = quote(location, safe="/:?=&+%#")
         self.send_response(303)
-        self.send_header("Location", location)
+        self.send_header("Location", safe_location)
         if set_uid is not None:
             self.send_header("Set-Cookie", f"elgg_uid={set_uid}; Path=/; SameSite=Lax")
         self.end_headers()
